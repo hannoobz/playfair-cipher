@@ -20,13 +20,24 @@ const keymaker = Util.pipe(
 	p.alphabetFill
 )
 
-const key = keymaker("jalan ganesha sepuluh")
-const plaintext = preprocessor("temui ibu nanti malam")
+console.log(Util.shuffle())
 
-const ciphertext = pf.cipher(plaintext, key)
 
-const deciphertext = pf.decipher(ciphertext, key)
-
-console.log(ciphertext)
-console.log(deciphertext)
-
+// const key = keymaker("jalan ganesha sepuluh")
+// const plaintext = preprocessor("temui ibu nanti malam")
+//
+// const ciphertext = pf.cipher(plaintext, key)
+//
+// const deciphertext = pf.decipher(ciphertext, key)
+//
+// console.log(ciphertext)
+// console.log(deciphertext)
+//
+// console.time("cipher");
+// Playfair.cipher("A".repeat(21000), "ABCDEFGHIKLMNOPQRSTUVWXYZ");
+// console.timeEnd("cipher");
+//
+//
+// const randomize = keymaker(Util.randomString())
+// console.log(randomize)
+// console.log(Util.shuffle(randomize))
