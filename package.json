@@ -8,6 +8,7 @@
   "scripts": {
     "app": "node dist/app.js",
 		"solve": "node dist/app.js solve",
+		"build": "tsc",
 		"precompute": "node dist/app.js precompute",
     "dev": "tsc && node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
