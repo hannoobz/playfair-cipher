@@ -1,4 +1,4 @@
-export default class Preprocess {
+class Preprocess {
 	public static toUpperCase(text: string): string {
 		return text.toUpperCase()
 	}
@@ -48,3 +48,6 @@ export default class Preprocess {
 		}, "").toString()
 	}
 }
+
+export = Preprocess
+

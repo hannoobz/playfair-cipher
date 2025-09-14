@@ -1,73 +1,64 @@
-import * as path from "path";
-import * as fs from "fs"
+import fs = require('fs')
+import path = require('path')
 
-export default class Precompute {
-	public static totalValue: number = 0;
-	public static read: Map<string, number> = new Map();
-	public static computed: Map<string, number> = new Map();
-
+class Precompute {
 	public static readFile(txtFilename: string) {
-		this.read.clear();
-		this.totalValue = 0;
-
+		const read = new Map<string, number>();
+		let totalValue = 0;
 		const fullPath = path.resolve(txtFilename);
 		const text = fs.readFileSync(fullPath, "utf8");
 		const lines = text.split(/\r?\n/).filter(Boolean);
-
 		for (const line of lines) {
 			const [quad, countStr] = line.trim().split(/\s+/);
 			const count = parseInt(countStr!, 10);
-
 			if (!isNaN(count)) {
-				this.read.set(quad!, count);
-				this.totalValue += count;
+				read.set(quad!, count);
+				totalValue += count;
 			}
 		}
+		return { read, totalValue, txtFilename };
 	}
 
-	public static compute() {
-		if (this.totalValue === 0) {
-			throw new Error()
+	public static compute(data: { read: Map<string, number>, totalValue: number, txtFilename: string }) {
+		const { read, totalValue, txtFilename } = data;
+		if (totalValue === 0) {
+			throw new Error("totalValue cannot be zero.");
 		}
-		this.computed.clear();
-		for (const [quad, count] of this.read.entries()) {
-			const probability = count / this.totalValue;
-			this.computed.set(quad, Math.log10(probability));
+		const computed = new Map<string, number>();
+		for (const [quad, count] of read.entries()) {
+			const probability = count / totalValue;
+			computed.set(quad, Math.log10(probability));
 		}
+		return { ...data, computed };
 	}
 
-	public static exportToFile(txtFilename: string) {
-		if (this.computed.size === 0) {
-			throw new Error()
+	public static exportToFile(data: { computed: Map<string, number>, txtFilename: string }) {
+		const { computed, txtFilename } = data;
+		if (computed.size === 0) {
+			throw new Error("No computed data to export.");
 		}
-		const lines: string[] = [];
-		for (const [quad, logProb] of this.computed.entries()) {
-			lines.push(`${quad} ${logProb}`);
-		}
-		const fullPath = path.resolve(txtFilename);
+		const lines = Array.from(computed.entries()).map(
+			([quad, logProb]) => `${quad} ${logProb}`
+		);
+		const fullPath = path.resolve(`logprob-${txtFilename}`);
 		fs.writeFileSync(fullPath, lines.join("\n"), "utf8");
+		return data;
 	}
 
-	public static readPrecomputed(txtFilename: string) {
-		this.computed.clear();
-
+	public static readPrecomputed(txtFilename: string): Map<string, number> {
+		const computed = new Map<string, number>();
 		const fullPath = path.resolve(txtFilename);
 		const text = fs.readFileSync(fullPath, "utf8");
 		const lines = text.split(/\r?\n/).filter(Boolean);
-
 		for (const line of lines) {
 			const [quad, logProbStr] = line.trim().split(/\s+/);
 			const logProb = parseFloat(logProbStr!);
 			if (!isNaN(logProb)) {
-				this.computed.set(quad!, logProb);
+				computed.set(quad!, logProb);
 			}
 		}
+		return computed;
 	}
 }
 
-Precompute.readFile('4grams.txt')
-Precompute.compute()
-Precompute.exportToFile('4grams_logprob.txt')
-
-
-
+export = Precompute

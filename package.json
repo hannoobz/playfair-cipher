@@ -4,19 +4,22 @@
   "description": "",
   "license": "ISC",
   "author": "Hanief Fatkhan Nashrullah",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "app": "tsc && node dist/app.js",
-    "convert": "tsc && node dist/Converter.js",
+    "app": "node dist/app.js",
+		"solve": "node dist/app.js solve",
+		"precompute": "node dist/app.js precompute",
+    "dev": "tsc && node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "@types/node": "^24.3.1",
+    "@types/yargs": "^17.0.33",
     "typescript": "^5.9.2"
   },
   "dependencies": {
     "fs": "^0.0.1-security",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "yargs": "^18.0.0"
   }
 }
